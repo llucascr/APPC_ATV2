@@ -19,14 +19,14 @@ def Validar_id_matricula():
         id_matricula = int(input("Digite o ID da matrícula:"))
     return id_matricula
 
-def Calculo_imposto(salario_bruto):
-    if salario_bruto <= 2259.20:
+def Calculo_imposto(salario_liquido):
+    if salario_liquido <= 2259.20:
         imposto = 0
-    elif salario_bruto <= 2828.65:
+    elif salario_liquido <= 2828.65:
         imposto = 0.075
-    elif salario_bruto <= 3751.05:
+    elif salario_liquido <= 3751.05:
         imposto = 0.15
-    elif salario_bruto <= 4664.68:
+    elif salario_liquido <= 4664.68:
         imposto = 0.225 
     else:
         imposto = 0.275
@@ -51,10 +51,13 @@ def Cadastro_funcionario():
             salario_bruto = float(input("Salário do funcionário: "))
     numero_faltas = int(input("Número de faltas por mês: "))
     for i in range(numero_faltas):
-        salario_bruto -= 1500/30
+        # Pesquisar sobre salario liquido e salario bruto
+        # Atenção: Mudança no nome das variaveis salario bruto e salario liquido
+        # Percentual do Imposto – para determinar o Salário Líquido
+        salario_liquido = salario_bruto - 1500/30
     imposto = Calculo_imposto(salario_bruto)
 
-    funcionarios[id_matricula] = [nome, cod_funcao, numero_faltas, salario_bruto, imposto]
+    funcionarios[id_matricula] = [nome, cod_funcao, numero_faltas, salario_liquido, salario_bruto, imposto]
 
 def Remover_funcionario():
     print(">>> Remoção de Funcionario >>>")
@@ -67,16 +70,28 @@ def Remover_funcionario():
 def Folha_pagamento():
     print("Determinar folha de pagamento por ID de determinado funcionário")
     key = int(input("ID do(a) funcionário: "))
-    for achar in funcionarios.keys(): # ERRO: esta pegandon todos os funcionarios 
-        if key == achar:
-            for id,index in funcionarios.items():
-                print(f"""
-                ID: {id}
-                NOME: {index[0]}
-                CODIGO: {index[1]}
-                SALÁRIO BRUTO: R${index[3]}
-                PORCENTUAL DE IMPOSTO: {index[4]}
-                """)
+    for id, index in funcionarios.items(): 
+        if key == id:
+            print(f"""
+            ID: {id}
+            NOME: {index[0]}
+            CODIGO: {index[1]}
+            SALÁRIO BRUTO: R${index[3]}
+            PORCENTUAL DE IMPOSTO: {index[4]}
+            """)
+        else:
+            print(">>> ID não existe")
+
+def Relatorio():
+    print("Relatório com salario bruto e liquido de todos os funcionarios")
+    for id, index in funcionarios.items():
+            print(f"""
+            ID: {id}
+            NOME: {index[0]}
+            CODIGO: {index[1]}
+            SALÁRIO BRUTO: R${index[4]}
+            SALÁRIO LIQUIDO: R$ {index[3]}
+            """)   
 
 menu = 1
 while menu > 0:
@@ -88,6 +103,8 @@ while menu > 0:
        |                                |
        | [3] - Folha de pagamento por ID|
        |                                |
+       | [4] - Relatório                |
+       |                                |
        | [0] - Sair do programa         |
        |================================|
                     OPÇÃO:"""))
@@ -98,3 +115,5 @@ while menu > 0:
         Remover_funcionario()
     elif menu == 3:
         Folha_pagamento()
+    elif menu == 4:
+        Relatorio()
