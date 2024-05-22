@@ -38,23 +38,27 @@ def Cadastro_funcionario():
     nome = str(input("Nome do funcionario: "))
     print("[101] - Vendedor\n[102] - Administrativo")
     cod_funcao = Validar_codigo_funcao()
+    numero_faltas = int(input("Número de faltas por mês: "))
     if cod_funcao == 101:
+        salario_fixo = 1500
+        falta = (salario_fixo / 30) * numero_faltas
         volume_vendas = int(input("Volume de vendas: "))
-        salario_bruto = (volume_vendas * 0.9) + 1500
+        salario_bruto = (volume_vendas * 0.9) + 1500 - falta
+        imposto = Calculo_imposto(salario_bruto)
+        print(imposto)
+        salario_liquido = salario_bruto - (salario_bruto * imposto)
+
         print(salario_bruto)
-        imposto = 0
     else:
         print("Salário varia entre R$2150,00 até R$6950,00")
-        salario_bruto = float(input("Salário do funcionário: "))
-        while salario_bruto < 2150 or salario_bruto > 6950:
+        salario_fixo = float(input("Salário do funcionário: "))
+        while salario_fixo < 2150 or salario_fixo > 6950:
             print("Por favor, digite um salário dentro da faixa especificada.")
-            salario_bruto = float(input("Salário do funcionário: "))
-
-    numero_faltas = int(input("Número de faltas por mês: "))
-    imposto = Calculo_imposto(salario_bruto)
-    for i in range(numero_faltas):
-        salario_liquido = salario_bruto - 1500/30
-
+            salario_fixo = float(input("Salário do funcionário: "))
+        falta = (salario_fixo / 30) * numero_faltas
+        salario_bruto = salario_fixo - falta
+        imposto = Calculo_imposto(salario_bruto)
+        salario_liquido = salario_bruto - (salario_bruto * imposto)
     
     funcionarios[id_matricula] = [nome, cod_funcao, numero_faltas, salario_liquido, salario_bruto, imposto]
 
@@ -76,7 +80,7 @@ def Folha_pagamento():
             NOME: {index[0]}
             CODIGO: {index[1]}
             SALÁRIO BRUTO: R${index[3]}
-            PORCENTUAL DE IMPOSTO: {index[4]}
+            PORCENTUAL DE IMPOSTO: {index[5]}
             """)
         else:
             print(">>> ID não existe")
