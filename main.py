@@ -20,7 +20,7 @@ def Validar_id_matricula():
     return id_matricula
 
 def Calculo_imposto(salario_bruto):
-    if salario_bruto <= 2259.20:
+    if salario_bruto < 2259.20:
         imposto = 0
     elif salario_bruto <= 2828.65:
         imposto = 0.075
@@ -39,7 +39,7 @@ def Cadastro_funcionario():
     print("[101] - Vendedor\n[102] - Administrativo")
     cod_funcao = Validar_codigo_funcao()
     numero_faltas = int(input("Número de faltas por mês: "))
-    if cod_funcao == 101:
+    if cod_funcao == 101: # SALARIO FUNÇÃO 101
         salario_fixo = 1500
         falta = (salario_fixo / 30) * numero_faltas
         volume_vendas = int(input("Volume de vendas: "))
@@ -47,9 +47,8 @@ def Cadastro_funcionario():
         imposto = Calculo_imposto(salario_bruto)
         print(imposto)
         salario_liquido = salario_bruto - (salario_bruto * imposto)
-
         print(salario_bruto)
-    else:
+    else: # SALARIO FUNÇÃO 102
         print("Salário varia entre R$2150,00 até R$6950,00")
         salario_fixo = float(input("Salário do funcionário: "))
         while salario_fixo < 2150 or salario_fixo > 6950:
@@ -72,29 +71,33 @@ def Remover_funcionario():
 
 def Folha_pagamento():
     print("Determinar folha de pagamento por ID de determinado funcionário")
-    key = int(input("ID do(a) funcionário: "))
-    for id, index in funcionarios.items(): 
-        if key == id:
-            print(f"""
-            ID: {id}
-            NOME: {index[0]}
-            CODIGO: {index[1]}
-            SALÁRIO BRUTO: R${index[3]}
-            PORCENTUAL DE IMPOSTO: {index[5]}
-            """)
-        else:
-            print(">>> ID não existe")
+    key = int(input("ID do(a) funcionário: ")) 
+    if key not in funcionarios.keys():
+        print(">>> ID não existe")
+    else:
+        print(f"""
+        ID: {key}
+        NOME: {funcionarios[key][0]}
+        CODIGO: {funcionarios[key][1]}
+        SALÁRIO BRUTO: R${funcionarios[key][4]:.2f}
+        PORCENTUAL DE IMPOSTO: {funcionarios[key][5] * 100:.2f}%
+        """)
 
 def Relatorio():
     print("Relatório com salario bruto e liquido de todos os funcionarios")
+    print("\nMATRÍCULA\tNOME\t\tCÓDIGO\t\tSALÁRIO BRUTO\t\tSALÁRIO LIQUIDO")
     for id, index in funcionarios.items():
-            print(f"""
-            ID: {id}
-            NOME: {index[0]}
-            CODIGO: {index[1]}
-            SALÁRIO BRUTO: R${index[4]}
-            SALÁRIO LIQUIDO: R$ {index[3]}
-            """)
+            # TIPO TABELA 1
+            print(f"{id}\t\t{index[0]}\t\t{index[1]}\t\t{index[4]:.2f}\t\t\t{index[3]:.2f}")
+
+            # TIPO TABELA 2
+            # print(f"""
+            # ID: {id}
+            # NOME: {index[0]}
+            # CODIGO: {index[1]}
+            # SALÁRIO BRUTO: R${index[4]:.2f}
+            # SALÁRIO LIQUIDO: R$ {index[3]:.2f}
+            # """)
 
 def Maior_salario_liquido():
     maior = auxM = 0
@@ -103,26 +106,33 @@ def Maior_salario_liquido():
         if auxM > maior:
             maior = sl[3]
     print(maior)
+    print(f"""
+        ID: 
+        NOME: 
+        CODIGO: 
+        SALÁRIO BRUTO: R$
+        SALÁRIO LIQUIDO: R$ 
+        """)
 
 menu = 1
 while menu > 0:
-    menu = int(input("""
-       |=====================================|
-       | [1] - Adicionar funcionários.       |
-       |                                     |
-       | [2] - Remover funcionários.         |
-       |                                     |
-       | [3] - Folha de pagamento por ID     |
-       |                                     |
-       | [4] - Relatório                     |
-       |                                     |
-       | [5] - Maior salario liquido         |
-       |                                     |
-       | [6] - Maior número de faltas no mês |
-       |                                     |
-       | [0] - Sair do programa              |
-       |=====================================|
-                    OPÇÃO:"""))
+    menu = int(input(""" 
+            ╔════════════════════════════════════╗
+                            MENU  
+            ╚════════════════════════════════════╝
+                  [1] - Inserir Funcionários 
+                     
+                  [2] - Remover Funcionários 
+                     
+                  [3] - Folha de Pagamento
+                     
+                  [4] - Relatório de Salário
+                     
+                  [5] - Maior Salário Liquido
+                     
+                  [5] - Maior número de faltas
+            ╚═════════════════════════════════════╝
+                          OPÇÃO: """))
     Limpar()
     if menu == 1:
         Cadastro_funcionario()
