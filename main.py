@@ -5,21 +5,21 @@ funcionarios = {}
 def Limpar():
     os.system("cls")
 
-def Validar_codigo_funcao():
-    cod_funcao = int(input("Código da função: "))
-    while cod_funcao != 101 and cod_funcao != 102:
-        print("Código da função invalido >>> Tente novamente!!! ")
-        cod_funcao = int(input("Código da função: "))
-    return cod_funcao
+# def Validar_codigo_funcao():
+#     cod_funcao = int(input("Código da função: "))
+#     while cod_funcao != 101 and cod_funcao != 102:
+#         print("Código da função invalido >>> Tente novamente!!! ")
+#         cod_funcao = int(input("Código da função: "))
+#     return cod_funcao
 
-def Validar_id_matricula():
-    id_matricula = int(input("Digite o ID da matrícula:"))
-    while id_matricula in funcionarios:
-        print("ID de matricula ja existe >>> Tente novamente!!! ")
-        id_matricula = int(input("Digite o ID da matrícula:"))
-    return id_matricula
+# def Validar_id_matricula():
+#     id_matricula = int(input("Digite o ID da matrícula:"))
+#     while id_matricula in funcionarios:
+#         print("ID de matricula ja existe >>> Tente novamente!!! ")
+#         id_matricula = int(input("Digite o ID da matrícula:"))
+#     return id_matricula
 
-def Calculo_imposto(salario_bruto):
+def Calculo_imposto(salario_bruto): #? Pergunatar para o time se retiro essa função
     if salario_bruto < 2259.20:
         imposto = 0
     elif salario_bruto <= 2828.65:
@@ -34,23 +34,32 @@ def Calculo_imposto(salario_bruto):
 
 
 def Cadastro_funcionario():
-    id_matricula = Validar_id_matricula()
+    id_matricula = int(input("Digite o ID da matrícula:"))
+    #! VALIDAÇÃO MATRICULA
+    while id_matricula in funcionarios:
+        print("ID de matricula ja existe >>> Tente novamente!!! ")
+        id_matricula = int(input("Digite o ID da matrícula:"))
     nome = str(input("Nome do funcionario: "))
     print("[101] - Vendedor\n[102] - Administrativo")
-    cod_funcao = Validar_codigo_funcao()
+    cod_funcao = int(input("Código da função: "))
+    #! VALIDAÇÃOO COD FUNÇÃO
+    while cod_funcao != 101 and cod_funcao != 102:
+        print("Código da função invalido >>> Tente novamente!!! ")
+        cod_funcao = int(input("Código da função: "))
     numero_faltas = int(input("Número de faltas por mês: "))
-    if cod_funcao == 101: # SALARIO FUNÇÃO 101
+    #! SALARIO FUNÇÃO 101
+    if cod_funcao == 101: 
         salario_fixo = 1500
         falta = (salario_fixo / 30) * numero_faltas
         volume_vendas = int(input("Volume de vendas: "))
         salario_bruto = (volume_vendas * 0.9) + 1500 - falta
         imposto = Calculo_imposto(salario_bruto)
-        print(imposto)
         salario_liquido = salario_bruto - (salario_bruto * imposto)
-        print(salario_bruto)
-    else: # SALARIO FUNÇÃO 102
+    #! SALARIO FUNÇÃO 102
+    else: 
         print("Salário varia entre R$2150,00 até R$6950,00")
         salario_fixo = float(input("Salário do funcionário: "))
+        #! VALIDAÇÃO 2150 < SALARIO FIXO < 6950
         while salario_fixo < 2150 or salario_fixo > 6950:
             print("Por favor, digite um salário dentro da faixa especificada.")
             salario_fixo = float(input("Salário do funcionário: "))
@@ -59,7 +68,9 @@ def Cadastro_funcionario():
         imposto = Calculo_imposto(salario_bruto)
         salario_liquido = salario_bruto - (salario_bruto * imposto)
     
-    funcionarios[id_matricula] = [nome, cod_funcao, numero_faltas, salario_liquido, salario_bruto, imposto]
+    funcionarios[id_matricula] = [nome, cod_funcao, numero_faltas, salario_liquido, salario_bruto, imposto, falta]
+
+    # TODO: otimizar o código (diminuir a quantidade de linhas se possivel?)
 
 def Remover_funcionario():
     print(">>> Remoção de Funcionario >>>")
@@ -101,17 +112,30 @@ def Relatorio():
 
 def Maior_salario_liquido():
     maior = auxM = 0
-    for sl in funcionarios.values():
+    for id,sl in funcionarios.items():
         auxM = sl[3]
         if auxM > maior:
             maior = sl[3]
-    print(maior)
     print(f"""
-        ID: 
-        NOME: 
-        CODIGO: 
-        SALÁRIO BRUTO: R$
-        SALÁRIO LIQUIDO: R$ 
+        ID: {id}
+        NOME: {sl[0]}
+        CODIGO: {sl[1]}
+        SALÁRIO BRUTO: R$ {sl[4]}
+        SALÁRIO LIQUIDO: R$ {sl[3]}
+        """)
+    
+def Mais_faltas():
+    maior = auxM = 0
+    for id, fal in funcionarios.items():
+        auxM = fal[2]
+        if auxM > maior:
+            maior = fal[2]
+    print(f"""
+        ID: {id}
+        NOME: {fal[0]}
+        CODIGO: {fal[1]}
+        NÚMERO DE FALTAS: {fal[2]}
+        DESCONTO: {fal[6]}
         """)
 
 menu = 1
@@ -130,7 +154,7 @@ while menu > 0:
                      
                   [5] - Maior Salário Liquido
                      
-                  [5] - Maior número de faltas
+                  [6] - Maior número de faltas
             ╚═════════════════════════════════════╝
                           OPÇÃO: """))
     Limpar()
@@ -144,3 +168,5 @@ while menu > 0:
         Relatorio()
     elif menu == 5:
         Maior_salario_liquido()
+    elif menu == 6:
+        Mais_faltas()
