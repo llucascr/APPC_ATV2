@@ -1,25 +1,10 @@
 import os
-
 funcionarios = {}
 
 def Limpar():
     os.system("cls")
 
-# def Validar_codigo_funcao():
-#     cod_funcao = int(input("Código da função: "))
-#     while cod_funcao != 101 and cod_funcao != 102:
-#         print("Código da função invalido >>> Tente novamente!!! ")
-#         cod_funcao = int(input("Código da função: "))
-#     return cod_funcao
-
-# def Validar_id_matricula():
-#     id_matricula = int(input("Digite o ID da matrícula:"))
-#     while id_matricula in funcionarios:
-#         print("ID de matricula ja existe >>> Tente novamente!!! ")
-#         id_matricula = int(input("Digite o ID da matrícula:"))
-#     return id_matricula
-
-def Calculo_imposto(salario_bruto): #? Pergunatar para o time se retiro essa função
+def Calculo_imposto(salario_bruto):
     if salario_bruto < 2259.20:
         imposto = 0
     elif salario_bruto <= 2828.65:
@@ -35,7 +20,7 @@ def Calculo_imposto(salario_bruto): #? Pergunatar para o time se retiro essa fun
 
 def Cadastro_funcionario():
     id_matricula = int(input("Digite o ID da matrícula:"))
-    #! VALIDAÇÃO MATRICULA
+    # VALIDAÇÃO MATRICULA
     while id_matricula in funcionarios:
         print("ID de matricula ja existe >>> Tente novamente!!! ")
         id_matricula = int(input("Digite o ID da matrícula:"))
@@ -47,7 +32,7 @@ def Cadastro_funcionario():
         print("Código da função invalido >>> Tente novamente!!! ")
         cod_funcao = int(input("Código da função: "))
     numero_faltas = int(input("Número de faltas por mês: "))
-    #! SALARIO FUNÇÃO 101
+    # SALARIO FUNÇÃO 101
     if cod_funcao == 101: 
         salario_fixo = 1500
         falta = (salario_fixo / 30) * numero_faltas
@@ -55,11 +40,11 @@ def Cadastro_funcionario():
         salario_bruto = (volume_vendas * 0.9) + 1500 - falta
         imposto = Calculo_imposto(salario_bruto)
         salario_liquido = salario_bruto - (salario_bruto * imposto)
-    #! SALARIO FUNÇÃO 102
+    # SALARIO FUNÇÃO 102
     else: 
         print("Salário varia entre R$2150,00 até R$6950,00")
         salario_fixo = float(input("Salário do funcionário: "))
-        #! VALIDAÇÃO 2150 < SALARIO FIXO < 6950
+        # VALIDAÇÃO 2150 < SALARIO FIXO < 6950
         while salario_fixo < 2150 or salario_fixo > 6950:
             print("Por favor, digite um salário dentro da faixa especificada.")
             salario_fixo = float(input("Salário do funcionário: "))
@@ -69,8 +54,6 @@ def Cadastro_funcionario():
         salario_liquido = salario_bruto - (salario_bruto * imposto)
     
     funcionarios[id_matricula] = [nome, cod_funcao, numero_faltas, salario_liquido, salario_bruto, imposto, falta]
-
-    # TODO: otimizar o código (diminuir a quantidade de linhas se possivel?)
 
 def Remover_funcionario():
     print(">>> Remoção de Funcionario >>>")
@@ -98,17 +81,7 @@ def Relatorio():
     print("Relatório com salario bruto e liquido de todos os funcionarios")
     print("\nMATRÍCULA\tNOME\t\tCÓDIGO\t\tSALÁRIO BRUTO\t\tSALÁRIO LIQUIDO")
     for id, index in funcionarios.items():
-            # TIPO TABELA 1
             print(f"{id}\t\t{index[0]}\t\t{index[1]}\t\t{index[4]:.2f}\t\t\t{index[3]:.2f}")
-
-            # TIPO TABELA 2
-            # print(f"""
-            # ID: {id}
-            # NOME: {index[0]}
-            # CODIGO: {index[1]}
-            # SALÁRIO BRUTO: R${index[4]:.2f}
-            # SALÁRIO LIQUIDO: R$ {index[3]:.2f}
-            # """)
 
 def Maior_salario_liquido():
     maior = auxM = 0
